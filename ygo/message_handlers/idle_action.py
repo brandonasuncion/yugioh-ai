@@ -20,7 +20,7 @@ def idle_action(self, pl):
     specs = set(card.get_spec(self.players[self.tp]) for card in cards)
     
     def prompt():
-        options = list(specs)
+        options = self.get_usable(pl)
         pl.notify(pl._("Select a card on which to perform an action."))
         pl.notify(
             pl._(
