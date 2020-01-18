@@ -6,14 +6,19 @@ from ygo.parsers.duel_parser import DuelParser
 
 
 def display_battle_menu(self, pl):
+    options = []
     pl.notify(pl._("Battle menu:"))
     if self.attackable:
+        options.append("a")
         pl.notify(pl._("a: Attack."))
     if self.activatable:
+        options.append("c")
         pl.notify(pl._("c: activate."))
     if self.to_m2:
+        options.append("m")
         pl.notify(pl._("m: Main phase 2."))
     if self.to_ep:
+        options.append("e")
         pl.notify(pl._("e: End phase."))
 
     def r(caller):
@@ -34,6 +39,7 @@ def display_battle_menu(self, pl):
     pl.notify(
         DuelReader,
         r,
+        options,
         no_abort=pl._("Invalid command."),
         prompt=pl._("Select an option:"),
         restore_parser=DuelParser,
