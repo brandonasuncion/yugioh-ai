@@ -1,5 +1,6 @@
 import sqlite3
 import re
+
 re._pattern_type = re.Pattern
 
 from ygo import duel as dm
@@ -8,9 +9,11 @@ from ygo import server
 from ygo.language_handler import LanguageHandler
 from ygo.duel_reader import DuelReader
 
+
 class Response:
     def __init__(self, text):
         self.text = text
+
 
 class FakeRoom:
     def announce_draw(self):
@@ -24,6 +27,7 @@ class FakeRoom:
 
     def process(self):
         pass
+
 
 class FakePlayer:
     def __init__(self, i, deck):
@@ -49,6 +53,7 @@ class FakePlayer:
     def strings(self):
         return glb.language_handler.get_strings(self.language)
 
+
 class DumbAI(FakePlayer):
     def notify(self, arg1, *args, **kwargs):
         if arg1 == DuelReader:
@@ -60,12 +65,14 @@ class DumbAI(FakePlayer):
         else:
             print(self.duel_player, arg1)
 
+
 # from ygo/utils.py
 def process_duel(d):
     while d.started:
         res = d.process()
         if res & 0x20000:
             break
+
 
 def main():
     deck = [
@@ -78,25 +85,25 @@ def main():
         64428736,
         64428736,
         64428736,
-        #93221206,
-        #93221206,
-        #93221206,
-        #36821538,
-        #36821538,
-        #36821538,
-        #85639257,
-        #85639257,
-        #85639257,
-        #49881766,
-        #49881766,
-        #49881766,
+        # 93221206,
+        # 93221206,
+        # 93221206,
+        # 36821538,
+        # 36821538,
+        # 36821538,
+        # 85639257,
+        # 85639257,
+        # 85639257,
+        # 49881766,
+        # 49881766,
+        # 49881766,
     ]
 
     glb.language_handler = LanguageHandler()
     glb.language_handler.add("english", "en")
     glb.language_handler.set_primary_language("english")
     glb.server = server.Server()
-    glb.server.db = sqlite3.connect('locale/en/cards.cdb')
+    glb.server.db = sqlite3.connect("locale/en/cards.cdb")
     glb.server.db.row_factory = sqlite3.Row
 
     duel = dm.Duel()
