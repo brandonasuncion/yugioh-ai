@@ -7,26 +7,6 @@ from ygo.utils import process_duel
 
 
 def idle_action(self, pl):
-    def prompt():
-        pl.notify(pl._("Select a card on which to perform an action."))
-        pl.notify(
-            pl._(
-                "h shows your hand, tab and tab2 shows your or the opponent's table, ? shows usable cards."
-            )
-        )
-        if self.to_bp:
-            pl.notify(pl._("b: Enter the battle phase."))
-        if self.to_ep:
-            pl.notify(pl._("e: End phase."))
-        pl.notify(
-            DuelReader,
-            r,
-            ["e"],
-            no_abort=pl._("Invalid specifier. Retry."),
-            prompt=pl._("Select a card:"),
-            restore_parser=DuelParser,
-        )
-
     cards = []
     for i in (0, 1):
         for j in (
@@ -38,6 +18,29 @@ def idle_action(self, pl):
         ):
             cards.extend(self.get_cards_in_location(i, j))
     specs = set(card.get_spec(self.players[self.tp]) for card in cards)
+    
+    def prompt():
+        options = list(specs)
+        pl.notify(pl._("Select a card on which to perform an action."))
+        pl.notify(
+            pl._(
+                "h shows your hand, tab and tab2 shows your or the opponent's table, ? shows usable cards."
+            )
+        )
+        if self.to_bp:
+            options.append("b")
+            pl.notify(pl._("b: Enter the battle phase."))
+        if self.to_ep:
+            options.append("e")
+            pl.notify(pl._("e: End phase."))
+        pl.notify(
+            DuelReader,
+            r,
+            options,
+            no_abort=pl._("Invalid specifier. Retry."),
+            prompt=pl._("Select a card:"),
+            restore_parser=DuelParser,
+        )
 
     def r(caller):
         if caller.text == "b" and self.to_bp:
