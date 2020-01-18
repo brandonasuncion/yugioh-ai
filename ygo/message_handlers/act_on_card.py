@@ -20,17 +20,23 @@ def act_on_card(self, caller, card):
                 prompt=pl._("Select action for {card}").format(card=name),
                 restore_parser=DuelParser,
             )
+        options = []
         pl.notify(name)
         activate_count = self.idle_activate.count(card)
         if card in self.summonable:
+            options.append("s")
             pl.notify("s: " + pl._("Summon this card in face-up attack position."))
         if card in self.idle_set:
+            options.append("t")
             pl.notify("t: " + pl._("Set this card."))
         if card in self.idle_mset:
+            options.append("m")
             pl.notify("m: " + pl._("Summon this card in face-down defense position."))
         if card in self.repos:
+            options.append("r")
             pl.notify("r: " + pl._("reposition this card."))
         if card in self.spsummon:
+            options.append("c")
             pl.notify("c: " + pl._("Special summon this card."))
         if activate_count > 0:
             effect_descriptions = []
@@ -39,15 +45,18 @@ def act_on_card(self, caller, card):
                 effect_descriptions.append(card.get_effect_description(pl, ind))
 
             if activate_count == 1:
+                options.append("v")
                 pl.notify("v: " + effect_descriptions[0])
             else:
                 for i in range(activate_count):
+                    options.append("v" + chr(97 + i))
                     pl.notify("v" + chr(97 + i) + ": " + effect_descriptions[i])
         pl.notify("i: " + pl._("Show card info."))
         pl.notify("z: " + pl._("back."))
         pl.notify(
             DuelReader,
             action,
+            options,
             no_abort=pl._("Invalid command."),
             prompt=pl._("Select action for {card}").format(card=name),
             restore_parser=DuelParser,
