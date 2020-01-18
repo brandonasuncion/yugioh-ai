@@ -9,11 +9,14 @@ from ygo import server
 from ygo.language_handler import LanguageHandler
 from ygo.duel_reader import DuelReader
 
+class Connection:
+    def __init__(self, pl):
+        self.player = pl
 
 class Response:
-    def __init__(self, text):
+    def __init__(self, text, pl):
         self.text = text
-
+        self.connection = Connection(pl)
 
 class FakeRoom:
     def announce_draw(self):
@@ -45,7 +48,7 @@ class FakePlayer:
         if arg1 == DuelReader:
             func, options = args[0], args[1]
             s = input()
-            func(Response(s))
+            func(Response(s, self))
         else:
             print(self.duel_player, arg1)
 
@@ -61,7 +64,7 @@ class DumbAI(FakePlayer):
             print(self.duel_player, "options", options)
             s = options[0]
             print(self.duel_player, "chose", s)
-            caller = Response(s)
+            caller = Response(s, self)
             func(caller)
         else:
             print(self.duel_player, arg1)
