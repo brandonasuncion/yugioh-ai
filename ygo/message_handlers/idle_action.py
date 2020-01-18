@@ -13,7 +13,7 @@ def idle_action(self, pl):
 			pl.notify(pl._("b: Enter the battle phase."))
 		if self.to_ep:
 			pl.notify(pl._("e: End phase."))
-		pl.notify(DuelReader, r,
+		pl.notify(DuelReader, r, ["e"],
 		no_abort=pl._("Invalid specifier. Retry."),
 		prompt=pl._("Select a card:"),
 		restore_parser=DuelParser)

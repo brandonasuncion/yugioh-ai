@@ -37,26 +37,28 @@ class FakePlayer:
 
     _ = lambda self, t: t
 
-    def notify(self, text, *args, **kwargs):
-        if text == DuelReader:
+    def notify(self, arg1, *args, **kwargs):
+        if arg1 == DuelReader:
+            func, options = args[0], args[1]
             s = input()
-            caller = Response(s)
-            args[0](caller)
+            func(Response(s))
         else:
-            print(self.duel_player, text)
+            print(self.duel_player, arg1)
 
     @property
     def strings(self):
         return glb.language_handler.get_strings(self.language)
 
 class DumbAI(FakePlayer):
-    def notify(self, text, *args, **kwargs):
-        if text == DuelReader:
-            s = input()
+    def notify(self, arg1, *args, **kwargs):
+        if arg1 == DuelReader:
+            func, options = args[0], args[1]
+            s = options[0]
+            print(self.duel_player, "chose", s)
             caller = Response(s)
-            args[0](caller)
+            func(caller)
         else:
-            print(self.duel_player, text)
+            print(self.duel_player, arg1)
 
 # from ygo/utils.py
 def process_duel(d):
@@ -99,8 +101,8 @@ def main():
 
     duel = dm.Duel()
     duel.room = FakeRoom()
-    config = {"players": ["Human", "Machine"], "decks": [deck, deck]}
-    players = [FakePlayer(0, config["decks"][0]), DumbAI(1, config["decks"][1])]
+    config = {"players": ["Alice", "Bob"], "decks": [deck, deck]}
+    players = [DumbAI(0, config["decks"][0]), DumbAI(1, config["decks"][1])]
     for i, name in enumerate(config["players"]):
         players[i].nickname = name
         duel.load_deck(players[i])
@@ -114,7 +116,6 @@ def main():
     options = 0
     duel.start(((rules & 0xFF) << 16) + (options & 0xFFFF))
     process_duel(duel)
-    print("END")
 
 
 if __name__ == "__main__":

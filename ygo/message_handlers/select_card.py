@@ -55,7 +55,7 @@ def select_card(self, player, cancelable, min_cards, max_cards, cards, is_tribut
 		for i, c in enumerate(cards):
 			name = self.cardlist_info_for_player(c, pl)
 			pl.notify("%d: %s" % (i+1, name))
-		pl.notify(DuelReader, f, no_abort="Invalid command", restore_parser=DuelParser)
+		pl.notify(DuelReader, f, ["1"], no_abort="Invalid command", restore_parser=DuelParser)
 	def error(text):
 		pl.notify(text)
 		return prompt()
