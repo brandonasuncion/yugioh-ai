@@ -1,3 +1,4 @@
+import random
 import sqlite3
 import re
 
@@ -57,12 +58,12 @@ class FakePlayer:
         return glb.language_handler.get_strings(self.language)
 
 
-class DumbAI(FakePlayer):
+class RandomAI(FakePlayer):
     def notify(self, arg1, *args, **kwargs):
         if arg1 == DuelReader:
             func, options = args[0], args[1]
             print(self.duel_player, "options", options)
-            s = options[0]
+            s = random.choice(options)
             print(self.duel_player, "chose", s)
             caller = Response(s, self)
             func(caller)
@@ -79,30 +80,10 @@ def process_duel(d):
 
 
 def main():
-    deck = [
-        43096270,
-        43096270,
-        43096270,
-        97127906,
-        97127906,
-        97127906,
-        64428736,
-        64428736,
-        64428736,
-        # 93221206,
-        # 93221206,
-        # 93221206,
-        # 36821538,
-        # 36821538,
-        # 36821538,
-        # 85639257,
-        # 85639257,
-        # 85639257,
-        # 49881766,
-        # 49881766,
-        # 49881766,
-    ]
-
+    with open("normal.ydk") as f:
+        lines = f.readlines()
+        deck = [int(line) for line in lines if line[:-1].isdigit()]
+    
     glb.language_handler = LanguageHandler()
     glb.language_handler.add("english", "en")
     glb.language_handler.set_primary_language("english")
@@ -113,13 +94,13 @@ def main():
     duel = dm.Duel()
     duel.room = FakeRoom()
     config = {"players": ["Alice", "Bob"], "decks": [deck, deck]}
-    players = [DumbAI(0, config["decks"][0]), DumbAI(1, config["decks"][1])]
+    players = [RandomAI(0, config["decks"][0]), RandomAI(1, config["decks"][1])]
     for i, name in enumerate(config["players"]):
         players[i].nickname = name
         duel.load_deck(players[i])
     duel.players = players
-    duel.set_player_info(0, 8000)
-    duel.set_player_info(1, 8000)
+    duel.set_player_info(0, 300)
+    duel.set_player_info(1, 300)
     # rules = 0, Default
     # rules = 1, Traditional
     # rules = 4, Link
@@ -127,6 +108,7 @@ def main():
     options = 0
     duel.start(((rules & 0xFF) << 16) + (options & 0xFFFF))
     process_duel(duel)
+    print(duel.lp)
 
 
 if __name__ == "__main__":
