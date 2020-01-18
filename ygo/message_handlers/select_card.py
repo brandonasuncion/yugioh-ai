@@ -66,11 +66,13 @@ def select_card(
                 pl._("Select %d to %d cards separated by spaces:")
                 % (min_cards, max_cards)
             )
+        options = []
         for i, c in enumerate(cards):
             name = self.cardlist_info_for_player(c, pl)
+            options.append(str(i + 1))
             pl.notify("%d: %s" % (i + 1, name))
         pl.notify(
-            DuelReader, f, ["1"], no_abort="Invalid command", restore_parser=DuelParser
+            DuelReader, f, options, no_abort="Invalid command", restore_parser=DuelParser
         )
 
     def error(text):
