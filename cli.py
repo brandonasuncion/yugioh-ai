@@ -58,6 +58,7 @@ class DumbAI(FakePlayer):
     def notify(self, arg1, *args, **kwargs):
         if arg1 == DuelReader:
             func, options = args[0], args[1]
+            print(self.duel_player, "options", options)
             s = options[0]
             print(self.duel_player, "chose", s)
             caller = Response(s)
