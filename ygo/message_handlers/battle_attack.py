@@ -34,6 +34,7 @@ def battle_attack(self, pl):
     pl.notify(
         DuelReader,
         r,
+        list(specs.keys()),
         no_abort=pl._("Invalid command."),
         prompt=pl._("Select a card:"),
         restore_parser=DuelParser,
