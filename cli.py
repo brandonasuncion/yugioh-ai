@@ -1,5 +1,6 @@
 import random
 import sqlite3
+import argparse
 import re
 
 re._pattern_type = re.Pattern
@@ -10,14 +11,17 @@ from ygo import server
 from ygo.language_handler import LanguageHandler
 from ygo.duel_reader import DuelReader
 
+
 class Connection:
     def __init__(self, pl):
         self.player = pl
+
 
 class Response:
     def __init__(self, text, pl):
         self.text = text
         self.connection = Connection(pl)
+
 
 class FakeRoom:
     def announce_draw(self):
@@ -80,10 +84,19 @@ def process_duel(d):
 
 
 def main():
-    with open("normal.ydk") as f:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--deck1", help="deck for player 1", type=str, required=True)
+    parser.add_argument("--deck2", help="deck for player 2", type=str, required=True)
+    args = parser.parse_args()
+
+    with open(args.deck1) as f:
         lines = f.readlines()
-        deck = [int(line) for line in lines if line[:-1].isdigit()]
-    
+        deck1 = [int(line) for line in lines if line[:-1].isdigit()]
+
+    with open(args.deck2) as f:
+        lines = f.readlines()
+        deck2 = [int(line) for line in lines if line[:-1].isdigit()]
+
     glb.language_handler = LanguageHandler()
     glb.language_handler.add("english", "en")
     glb.language_handler.set_primary_language("english")
@@ -93,14 +106,14 @@ def main():
 
     duel = dm.Duel()
     duel.room = FakeRoom()
-    config = {"players": ["Alice", "Bob"], "decks": [deck, deck]}
+    config = {"players": ["Alice", "Bob"], "decks": [deck1, deck2]}
     players = [RandomAI(0, config["decks"][0]), RandomAI(1, config["decks"][1])]
     for i, name in enumerate(config["players"]):
         players[i].nickname = name
         duel.load_deck(players[i])
     duel.players = players
-    duel.set_player_info(0, 300)
-    duel.set_player_info(1, 300)
+    duel.set_player_info(0, 8000)
+    duel.set_player_info(1, 8000)
     # rules = 0, Default
     # rules = 1, Traditional
     # rules = 4, Link
