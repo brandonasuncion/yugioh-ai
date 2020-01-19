@@ -31,7 +31,9 @@ def idle_action(self, pl):
             options.append("b")
             pl.notify(pl._("b: Enter the battle phase."))
         if self.to_ep:
-            options.append("e")
+            # always go to bp if possible
+            if not self.to_bp:
+                options.append("e")
             pl.notify(pl._("e: End phase."))
         pl.notify(
             DuelReader,
