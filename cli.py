@@ -87,6 +87,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--deck1", help="deck for player 1", type=str, required=True)
     parser.add_argument("--deck2", help="deck for player 2", type=str, required=True)
+    parser.add_argument("--lp1", help="starting lp for player 1", type=int, default=8000)
+    parser.add_argument("--lp2", help="starting lp for player 2", type=int, default=8000)
     args = parser.parse_args()
 
     with open(args.deck1) as f:
@@ -112,8 +114,8 @@ def main():
         players[i].nickname = name
         duel.load_deck(players[i])
     duel.players = players
-    duel.set_player_info(0, 8000)
-    duel.set_player_info(1, 8000)
+    duel.set_player_info(0, args.lp1)
+    duel.set_player_info(1, args.lp2)
     # rules = 0, Default
     # rules = 1, Traditional
     # rules = 4, Link
