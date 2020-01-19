@@ -2,6 +2,9 @@ import io
 
 from ygo.constants import LOCATION
 
+def msg_flipsummoned(self, data):
+	return data[1:]
+
 def msg_flipsummoning(self, data):
 	data = io.BytesIO(data[1:])
 	code = self.read_u32(data)
@@ -21,6 +24,6 @@ def flipsummoning(self, card):
 		pl.notify(pl._("{player} flip summons {card} ({spec}).")
 		.format(player=cpl.nickname, card=card.get_name(pl), spec=spec))
 
-MESSAGES = {64: msg_flipsummoning}
+MESSAGES = {64: msg_flipsummoning, 65: msg_flipsummoned}
 
 CALLBACKS = {'flipsummoning': flipsummoning}
