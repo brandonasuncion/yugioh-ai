@@ -52,8 +52,8 @@ class FakePlayer:
     def notify(self, arg1, *args, **kwargs):
         if arg1 == DuelReader:
             func, options = args[0], args[1]
-            s = input()
-            func(Response(s, self))
+            chosen = input()
+            func(Response(chosen, self))
         else:
             print(self.duel_player, arg1)
 
@@ -66,10 +66,9 @@ class RandomAI(FakePlayer):
     def notify(self, arg1, *args, **kwargs):
         if arg1 == DuelReader:
             func, options = args[0], args[1]
-            print(self.duel_player, "options", options)
-            s = random.choice(options)
-            print(self.duel_player, "chose", s)
-            caller = Response(s, self)
+            chosen = random.choice(options)
+            print(self.duel_player, "chose", chosen, "in", options)
+            caller = Response(chosen, self)
             func(caller)
         else:
             print(self.duel_player, arg1)
