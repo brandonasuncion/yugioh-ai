@@ -1,5 +1,5 @@
 cli:
-	python3 cli.py --deck1 decks/normal4.ydk --deck2 decks/normal4.ydk
+	python3 cli.py --deck1 decks/normal46.ydk --deck2 decks/normal46.ydk
 
 ffi: libygo.so
 	python3 duel_build.py
