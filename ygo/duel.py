@@ -4,6 +4,7 @@ try:
 except ImportError:
 	DUEL_AVAILABLE = False
 
+import sys
 import os
 import io
 import struct
@@ -426,6 +427,7 @@ class Duel(Joinable):
 				except Exception as e:
 					print("Error loading message handler", modname)
 					print(e)
+					sys.exit(1)
 
 		# link all those methods into this object
 		for h in all_handlers.keys():
