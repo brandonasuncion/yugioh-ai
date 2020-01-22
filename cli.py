@@ -16,6 +16,7 @@ from ygo.duel_reader import DuelReader
 class Connection:
     def __init__(self, pl):
         self.player = pl
+        self.parser = None
 
 
 class Response:
@@ -47,6 +48,7 @@ class FakePlayer:
         self.watching = False
         self.seen_waiting = False
         self.soundpack = False
+        self.connection = Connection(self)
 
     _ = lambda self, t: t
 
