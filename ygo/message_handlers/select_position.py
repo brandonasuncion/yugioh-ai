@@ -1,9 +1,9 @@
-from gsb.intercept import Menu
 import io
 from twisted.internet import reactor
 
 from ygo.card import Card
 from ygo.constants import POSITION
+from ygo.duel_reader import DuelReader
 from ygo.parsers.duel_parser import DuelParser
 from ygo.utils import process_duel
 
@@ -20,26 +20,32 @@ def msg_select_position(self, data):
 
 def select_position(self, player, card, positions):
     pl = self.players[player]
-    m = Menu(
-        pl._("Select position for %s:") % (card.get_name(pl),),
-        no_abort="Invalid option.",
-        persistent=True,
-        restore_parser=DuelParser,
-    )
+    m = pl.notify(pl._("Select position for %s:") % (card.get_name(pl),), no_abort="Invalid option.", persistent=True, restore_parser=DuelParser)
 
-    def set(caller, pos=None):
-        self.set_responsei(pos)
+    def r(caller):
+        if caller.text == "ua":
+            self.set_responsei(1)
+        elif caller.text == "da":
+            self.set_responsei(2)
+        elif caller.text == "ud":
+            self.set_responsei(4)
+        elif caller.text == "dd":
+            self.set_responsei(8)
+        else:
+            pl.notify(DuelReader, r, no_abort=pl._("Invalid command"), restore_parser=DuelParser)
+
         reactor.callLater(0, process_duel, self)
 
     if positions & POSITION.FACEUP_ATTACK:
-        m.item(pl._("Face-up attack"))(lambda caller: set(caller, 1))
+        pl.notify("ua: " + pl._("Face-up attack"))
     if positions & POSITION.FACEDOWN_ATTACK:
-        m.item(pl._("Face-down attack"))(lambda caller: set(caller, 2))
+        pl.notify("da: " + pl._("Face-down attack"))
     if positions & POSITION.FACEUP_DEFENSE:
-        m.item(pl._("Face-up defense"))(lambda caller: set(caller, 4))
+        pl.notify("ud: " + pl._("Face-up defense"))
     if positions & POSITION.FACEDOWN_DEFENSE:
-        m.item(pl._("Face-down defense"))(lambda caller: set(caller, 8))
-    pl.notify(m)
+        pl.notify("dd: " + pl._("Face-down defense"))
+
+    pl.notify(DuelReader, r, no_abort=pl._("Invalid command"), restore_parser=DuelParser)
 
 
 MESSAGES = {19: msg_select_position}
