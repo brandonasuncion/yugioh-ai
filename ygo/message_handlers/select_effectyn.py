@@ -23,8 +23,10 @@ def select_effectyn(self, player, card, desc):
     def r(caller):
         if caller.text.lower().startswith('y'):
             self.set_responsei(1)
+            reactor.callLater(0, process_duel, self)
         elif caller.text.lower().startswith('n'):
             self.set_responsei(0)
+            reactor.callLater(0, process_duel, self)
         else:
             pl.notify(question)
             pl.notify(DuelReader, r, restore_parser=old_parser)
