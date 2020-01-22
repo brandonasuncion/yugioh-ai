@@ -2,7 +2,7 @@ import io
 from twisted.internet import reactor
 
 from ygo.card import Card
-from ygo.parsers.yes_or_no_parser import yes_or_no_parser
+from ygo.duel_reader import DuelReader
 from ygo.utils import process_duel
 
 
@@ -18,13 +18,16 @@ def yesno(self, player, desc):
     pl = self.players[player]
     old_parser = pl.connection.parser
 
-    def yes(caller):
-        self.set_responsei(1)
-        reactor.callLater(0, process_duel, self)
-
-    def no(caller):
-        self.set_responsei(0)
-        reactor.callLater(0, process_duel, self)
+    def r(caller):
+        if caller.text.lower().startswith('y'):
+            self.set_responsei(1)
+            reactor.callLater(0, process_duel, self)
+        elif caller.text.lower().startswith('n'):
+            self.set_responsei(0)
+            reactor.callLater(0, process_duel, self)
+        else:
+            pl.notify(opt)
+            pl.notify(DuelReader, r, restore_parser=old_parser)
 
     if desc > 10000:
         code = desc >> 4
@@ -35,7 +38,8 @@ def yesno(self, player, desc):
     else:
         opt = "String %d" % desc
         opt = pl.strings["system"].get(desc, opt)
-    pl.notify(yes_or_no_parser, opt, yes, no=no, restore_parser=old_parser)
+    pl.notify(opt)
+    pl.notify(DuelReader, r, restore_parser=old_parser)
 
 
 MESSAGES = {13: msg_yesno}
