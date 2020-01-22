@@ -1,3 +1,4 @@
+import itertools
 import random
 import sqlite3
 import argparse
@@ -51,7 +52,7 @@ class FakePlayer:
 
     def notify(self, arg1, *args, **kwargs):
         if arg1 == DuelReader:
-            func, options = args[0], args[1]
+            func = args[0]
             chosen = input()
             func(Response(chosen, self))
         else:
@@ -81,22 +82,28 @@ def process_duel(d):
         if res & 0x20000:
             break
 
+def load_deck(fn):
+    with open(fn) as f:
+        lines = f.readlines()
+        noside = itertools.takewhile(lambda x: "side" not in x, lines)
+        deck = [int(line) for line in  noside if line[:-1].isdigit()]
+        return deck
 
 def main():
+    player_factory = {
+        'manual': FakePlayer,
+        'random':RandomAI
+    }
     parser = argparse.ArgumentParser()
     parser.add_argument("--deck1", help="deck for player 1", type=str, required=True)
     parser.add_argument("--deck2", help="deck for player 2", type=str, required=True)
     parser.add_argument("--lp1", help="starting lp for player 1", type=int, default=8000)
     parser.add_argument("--lp2", help="starting lp for player 2", type=int, default=8000)
+    parser.add_argument("--p1", help="type of player 1", type=str, default='random', choices=player_factory.keys())
+    parser.add_argument("--p2", help="type of player 1", type=str, default='random', choices=player_factory.keys())
     args = parser.parse_args()
 
-    with open(args.deck1) as f:
-        lines = f.readlines()
-        deck1 = [int(line) for line in lines if line[:-1].isdigit()]
-
-    with open(args.deck2) as f:
-        lines = f.readlines()
-        deck2 = [int(line) for line in lines if line[:-1].isdigit()]
+    decks = [load_deck(args.deck1), load_deck(args.deck2)]
 
     glb.language_handler = LanguageHandler()
     glb.language_handler.add("english", "en")
@@ -107,8 +114,8 @@ def main():
 
     duel = dm.Duel()
     duel.room = FakeRoom()
-    config = {"players": ["Alice", "Bob"], "decks": [deck1, deck2]}
-    players = [RandomAI(0, config["decks"][0]), RandomAI(1, config["decks"][1])]
+    config = {"players": ["Alice", "Bob"], "decks": decks}
+    players = [player_factory[args.p1](0, config["decks"][0]), player_factory[args.p2](1, config["decks"][1])]
     for i, name in enumerate(config["players"]):
         players[i].nickname = name
         duel.load_deck(players[i])
