@@ -124,10 +124,11 @@ def main():
     duel.players = players
     duel.set_player_info(0, args.lp1)
     duel.set_player_info(1, args.lp2)
-    # rules = 0, Default
     # rules = 1, Traditional
+    # rules = 0, Default
     # rules = 4, Link
-    rules = 1
+    # rules = 5, MR5
+    rules = 5
     options = 0
     duel.start(((rules & 0xFF) << 16) + (options & 0xFFFF))
     process_duel(duel)
