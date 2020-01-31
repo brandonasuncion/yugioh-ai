@@ -4,9 +4,7 @@ Initially based on https://github.com/tspivey/yugioh-game
 
 The prototype will be written in Python 3 with the aim to have the final version in C++ for better performance.
 
-Current status: a manual cli mode where input for both players is read from stdin
-
-Next step: replace one or both player with an AI that makes random moves
+`cli.py` is able to simulate a match between two AI that makes random moves.
 
 
 ## Install dependencies
