@@ -4,7 +4,9 @@ Initially based on https://github.com/tspivey/yugioh-game
 
 The prototype will be written in Python 3 with the aim to have the final version in C++ for better performance.
 
-`cli.py` is able to simulate a match between two AI that makes random moves.
+`cli.py` is able to simulate a match between two AI that makes random moves. 
+
+To test it, install dependencies and execute `python3 cli.py --deck1 decks/normal46.ydk --deck2 decks/normal46.ydk`
 
 
 ## Install dependencies
