@@ -24,7 +24,7 @@ def display_battle_menu(self, pl):
         pl.notify(pl._("m: Main phase 2."))
     if self.to_ep:
         # always go to m2 if possible
-        if not self.to_m2
+        if not self.to_m2:
             options.append("e")
         pl.notify(pl._("e: End phase."))
 
