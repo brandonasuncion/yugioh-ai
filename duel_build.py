@@ -90,7 +90,7 @@ extern "Python" uint32 message_handler_callback (void *, int32);
 void set_message_handler(message_handler f);
 extern "Python" byte *script_reader_callback(const char *, int *);
 void set_script_reader(script_reader f);
-	ptr create_duel(uint32_t seed);
+ptr create_duel(uint32_t seed);
 void start_duel(ptr pduel, int32 options);
 void end_duel(ptr pduel);
 void get_log_message(ptr pduel, byte* buf);
@@ -106,6 +106,7 @@ int32 query_field_count(ptr pduel, uint8 playerid, uint8 location);
 int32 query_field_card(ptr pduel, uint8 playerid, uint8 location, int32 query_flag, byte* buf, int32 use_cache);
 uint32 query_linked_zone(ptr pduel, uint8 playerid, uint8 location, uint8 sequence);
 int32 declarable(struct card_data *cd, int32 size, uint32 *array);
+int32 preload_script(ptr pduel, const char* script, int32 len);
 """)
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import random
 import sqlite3
 import argparse
 import re
+from _duel import ffi, lib
 
 re._pattern_type = re.Pattern
 
@@ -103,6 +104,7 @@ def main():
     parser.add_argument("--lp2", help="starting lp for player 2", type=int, default=8000)
     parser.add_argument("--p1", help="type of player 1", type=str, default='random', choices=player_factory.keys())
     parser.add_argument("--p2", help="type of player 1", type=str, default='random', choices=player_factory.keys())
+    parser.add_argument("--preload", help="path to preload script", type=str, default=None)
     args = parser.parse_args()
 
     decks = [load_deck(args.deck1), load_deck(args.deck2)]
@@ -130,6 +132,10 @@ def main():
     # rules = 5, MR5
     rules = 5
     options = 0
+    if args.preload:
+        fn = args.preload
+        fn_buff = ffi.new("char[]", fn.encode('ascii'))
+        lib.preload_script(duel.duel, fn_buff, len(fn))
     duel.start(((rules & 0xFF) << 16) + (options & 0xFFFF))
     process_duel(duel)
     print(duel.lp)
