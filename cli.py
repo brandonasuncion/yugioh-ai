@@ -5,7 +5,11 @@ import argparse
 import re
 from _duel import ffi, lib
 
-re._pattern_type = re.Pattern
+try:
+    # needed on Python 3.7
+    re._pattern_type = re.Pattern
+except AttributeError:
+    pass
 
 from ygo import duel as dm
 from ygo import globals as glb
