@@ -14,5 +14,5 @@ liblua.a:
 libygo.so:
 	cd ../ygopro-core && \
 	git checkout -- . && \
-	patch -p0 < ../yugioh-game/etc/ygopro-core.patch
+	patch -p0 < ../yugioh-ai/etc/ygopro-core.patch
 	g++ -shared -fPIC -o $@ ../ygopro-core/*.cpp -I../lua-5.3.5/src -L../lua-5.3.5/src -llua -std=c++14
