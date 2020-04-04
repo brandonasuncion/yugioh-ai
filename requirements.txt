@@ -1,8 +1,8 @@
 aenum==2.2.1; python_version < '3.6'
-attrs==17.2.0
+attrs==19.3.0
 MailChecker
 twisted==18.4.0
-git+git://github.com/chrisnorman7/game-server-base.git@e2d0f12912bea56796e9b7fe7ab7ac8d2bae1311
+git+git://github.com/chrisnorman7/game-server-base.git@567c8c0ce1b30083e41b9f5c51c8f6e572bc662b
 cffi
 autobahn==17.9.2
 natsort==5.1.0
