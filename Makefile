@@ -4,7 +4,9 @@ cli:
 manual:
 	python3 cli.py --deck1 decks/70148.ydk --deck2 decks/normal46.ydk --p1 manual
 
-setup: script ffi locale/en/cards.cdb
+setup: requirements ffi script locale/en/cards.cdb
+
+requirements:
 	pip3 install --user -r requirements.txt
 
 script: vendor/ygopro-scripts
@@ -27,14 +29,14 @@ vendor/lua-5.3.5/src/liblua.a: vendor/lua-5.3.5
 
 vendor/ygopro-core:
 	wget https://github.com/Fluorohydride/ygopro-core/archive/master.zip
-	unzip master.zip -d vendor; mv vendor/ygopro-core-master vendor/ygopro-core
+	unzip master.zip -d vendor; mv vendor/ygopro-core-master $@
 	rm master.zip
 	patch vendor/ygopro-core/playerop.cpp etc/ygopro-core.patch
 
 vendor/ygopro-scripts:
 	wget https://github.com/Fluorohydride/ygopro-scripts/archive/master.zip
-	unzip master.zip -d vendor; mv vendor/ygopro-scripts-master vendor/ygopro-scripts
+	unzip master.zip -d vendor; mv vendor/ygopro-scripts-master $@
 	rm master.zip
 
 locale/en/cards.cdb:
-	cd locale/en; wget https://gitlab.com/duelists-unite/cdb/-/raw/master/cards.cdb
+	wget https://gitlab.com/duelists-unite/cdb/-/raw/master/cards.cdb -O $@
