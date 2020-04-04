@@ -28,7 +28,7 @@ You should see text output showing two AI playing a duel by making random moves.
 ## Install dependencies
 Lua is needed for ygopro-core. To make sure a matching lua version is used, we will compile it on our own:
 ```
-cd ..
+cd vendor
 wget https://www.lua.org/ftp/lua-5.3.5.tar.gz
 tar xf lua-5.3.5.tar.gz
 cd lua-5.3.5
@@ -42,18 +42,15 @@ pip3 install -r requirements.txt
 
 ## Building
 
-lua-5.3.5, ygopro-core, and ygopro-scripts must be placed one level up from this repository.
+lua-5.3.5, ygopro-core, and ygopro-scripts are put in vendor directory.
 
 ```
-cd ..
-git clone https://github.com/Fluorohydride/ygopro-core
-git clone https://github.com/Fluorohydride/ygopro-scripts
-cd ygopro-core
-patch -p0 < ../yugioh-ai/etc/ygopro-core.patch
-g++ -shared -fPIC -o ../yugioh-ai/libygo.so *.cpp -I../lua-5.3.5/src -L../lua-5.3.5/src -llua -std=c++14
-cd ../yugioh-ai
+git clone https://github.com/Fluorohydride/ygopro-core vendor/ygopro-core
+git clone https://github.com/Fluorohydride/ygopro-scripts vendor/ygopro-scripts
+patch vendor/ygopro-core/playerop.cpp etc/ygopro-core.patch
+g++ -shared -fPIC -o libygo.so vendor/ygopro-core/*.cpp -Ivendor/lua-5.3.5/src -Lvendor/lua-5.3.5/src -llua -std=c++14
 python3 duel_build.py
-ln -s ../ygopro-scripts script
+ln -s vendor/ygopro-scripts script
 ```
 
 ## Card database
@@ -61,7 +58,5 @@ ln -s ../ygopro-scripts script
 Obtain a copy of cards.cdb and put it in locale/en folder
 
 ```
-cd locale/en
-wget https://gitlab.com/duelists-unite/cdb/-/raw/master/cards.cdb
+wget https://gitlab.com/duelists-unite/cdb/-/raw/master/cards.cdb -O locale/en/cards.cdb
 ```
-
